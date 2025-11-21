@@ -10,7 +10,7 @@ public static void main(String[] args){
     // System.out.println(isAlive);
 
     if(isAlive){
-        System.out.println("Die.");
+        System.out.println("HOW IS HE ALIVEE????!!");
     }
 }
 
