@@ -78,13 +78,15 @@ public class Game {
                     enterScanner.nextLine();
                     System.out.println("Guard: Would you mind dealing with that for me?");
                     enterScanner.nextLine();
-                    System.out.println("Guard: I can let you in if you bring me the goblin's head.");
+                    System.out.println("Guard: I can let you in if you bring me his head.");
                     enterScanner.nextLine();
                     townEvent = 1;
                 }
 
                 else if (townEvent == 1){
-                    System.out.println("I can let you in if you bring me his head.");
+                    System.out.println("Guard: I can let you in if you bring me the goblin's head.");
+                    enterScanner.nextLine();
+                    System.out.println("Guard: He was roaming around the forest towards the west.");
                     enterScanner.nextLine();
                 }
                 TownGate();
