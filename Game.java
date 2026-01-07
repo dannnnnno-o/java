@@ -10,13 +10,20 @@ public class Game {
     static String playerWeapon;
     static String playerName;
     static int choice;
+                                        /*  休憩中  */
+    static int event = 0;
+    static int townEvent = 0;
+    static int fountainEvent = 0;
+    static int lakeEvent = 0;
 
     static int goblinHp;
+    static String goblinWeapon;
 
     
     public static void main(String[] args){
 
         PlayerSetup();
+        GoblinSetup();
 
         TownGate();
     
@@ -24,13 +31,10 @@ public class Game {
 
     public static void PlayerSetup(){
         playerHp = 15;
-
         playerWeapon = "Knife";
 
         System.out.println("Your HP: " + playerHp);
         System.out.println("Your Weapon: " + playerWeapon);
-
-
         System.out.print("Please enter your name: ");
 
         playerName = scanner.next();
@@ -38,12 +42,23 @@ public class Game {
         System.out.println("Hello " + playerName + ", welcome to adventure game!");
     }
 
+    public static void GoblinSetup(){
+        goblinHp = 10;
+        goblinWeapon = "club";
+    }
+
+
+
     public static void TownGate(){
 
-        System.out.println("You are at the gate of the town.");
-        System.out.println("A guard is standing in front of you.");
-        System.out.println("");
-        System.out.println("What do you want to do?");
+        if(townEvent == 0){
+            System.out.println("You are at the gate of the town.");
+            System.out.println("A guard is standing in front of you.\n");
+        }
+        else if(townEvent == 1){
+            System.out.println("The guard is standing in front of you.");
+        }
+
         System.out.println("[1] Talk to the guard");
         System.out.println("[2] Attack the guard");
         System.out.println("[3] Leave\n");
@@ -54,8 +69,24 @@ public class Game {
         System.out.println("\n\n\n");
         switch (choice) {
             case 1 -> {
-                System.out.println("Guard: Hello there stranger.");
-                enterScanner.nextLine();
+                if(townEvent == 0){
+                    System.out.println("Guard: Hello there stranger.");
+                    enterScanner.nextLine();
+                    System.out.println("Guard: So your name is " + playerName + "?");
+                    enterScanner.nextLine();
+                    System.out.println("Guard: There's currently a roaming goblin in the forest towards the west.");
+                    enterScanner.nextLine();
+                    System.out.println("Guard: Would you mind dealing with that for me?");
+                    enterScanner.nextLine();
+                    System.out.println("Guard: I can let you in if you bring me the goblin's head.");
+                    enterScanner.nextLine();
+                    townEvent = 1;
+                }
+
+                else if (townEvent == 1){
+                    System.out.println("I can let you in if you bring me his head.");
+                    enterScanner.nextLine();
+                }
                 TownGate();
             }
             case 2 -> {
@@ -64,6 +95,7 @@ public class Game {
                 playerHp--;
                 System.out.println("\nYour HP: " + playerHp);
                 enterScanner.nextLine();
+                townEvent = 1;
                 TownGate();
             }
             case 3 -> {
@@ -102,16 +134,22 @@ public class Game {
 
     public static void Lake(){
         System.out.println("\n\n\n");
+        if(lakeEvent == 0){
         System.out.println("You found yourself at a crystal clear lake.\n");
-        System.out.println("[1] Drink lake water");
-        System.out.println("[2] Go Back");
-        System.out.print("\nWhat would you like to do?: ");
+        }
+        else if(lakeEvent == 1){
+        System.out.println("You're at a crystal clear lake.\n");
+        }
+    System.out.println("[1] Drink lake water");
+    System.out.println("[2] Go Back");
+    System.out.print("\nWhat would you like to do?: ");
 
         choice = scanner.nextInt();
 
         switch(choice){
             case 1 -> { //some novelistic writing about drinking water from the lake
                 System.out.println("You scooped some water with your hands.");
+                enterScanner.nextLine();
 
                 if(playerHp == 14){
                     playerHp++;
@@ -132,6 +170,7 @@ public class Game {
                     enterScanner.nextLine();
                 }
 
+                lakeEvent = 1;
                 Lake();
             }
 
@@ -144,41 +183,62 @@ public class Game {
     }
 
     public static void Forest(){
+        int battleStarted = 0;
+
         System.out.println("\n\n\n");
         System.out.println("You found yourself at a forest.");
         enterScanner.nextLine();
-        System.out.println("A goblin appeared!\n");
+        System.out.println("A goblin appears before you!\n");
         System.out.println("[1] Attack");
         System.out.println("[2] Flee");
         System.out.print("\nWhat would you like to do?: ");
+
 
         choice = scanner.nextInt();
 
         switch(choice){
             case 1 -> { //Battle Starts!
-            System.out.println("You attacked the goblin and dealt 2 damage!");
+            System.out.println("You attacked the goblin and dealt 4 damage!");
+            goblinHp -= 4;
             enterScanner.nextLine();
-            System.out.println("The goblin hit you back!");
-
+            System.out.println("The goblin hit you back with its club!");
+            playerHp -= 2;
+            enterScanner.nextLine();
+            
             }
             case 2 -> {
                 CrossRoad();
             }
+            default -> Forest();
+        }
     }
-}
+
+    public static void Battle(){
+
+    }
 
     public static void Fountain(){
         System.out.println("\n\n\n");
-        System.out.println("You stumbled upon a fountain with a statue of a certain Goddess.");
-        System.out.println("[1] Pray");
-        System.out.println("[2] Leave");
-        System.out.print("\nWhat would you like to do?: ");
+        if(fountainEvent == 0){
+            System.out.println("You stumbled upon a fountain with a statue of a certain Goddess.\n");
+        }
+        else if(fountainEvent == 1){
+            System.out.println("A fountain with a statue of a certain Goddess stands before you.\n");
+        }
+            System.out.println("[1] Pray");
+            System.out.println("[2] Leave");
+            System.out.print("\nWhat would you like to do?: ");
 
         choice = scanner.nextInt();
 
         switch(choice){
             case 1 -> {
-                System.out.println("Facing the statue, you slightly bowed and closed your eyes.");
+                if(fountainEvent == 0){
+                    System.out.println("Facing the statue, you slightly bowed and closed your eyes.");
+                }
+                else if(fountainEvent == 1){
+                    System.out.println("You slightly bowed your head and closed your eyes.");
+                }
                 enterScanner.nextLine();
                 System.out.println("...");
                 enterScanner.nextLine();
@@ -186,6 +246,7 @@ public class Game {
                 enterScanner.nextLine();
                 System.out.println("You feel at ease.");
                 enterScanner.nextLine();
+                fountainEvent = 1;
                 Fountain();
             }
 
@@ -195,9 +256,5 @@ public class Game {
 
             default -> Fountain();
         }
-    }
-
-    public static void Goblin(){
-        goblinHp = 10 
     }
 }
