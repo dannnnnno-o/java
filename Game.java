@@ -10,21 +10,18 @@ public class Game {
     static String playerWeapon;
     static String playerName;
     static int choice;
-                                        /*  休憩中  */
     static int event = 0;
     static int townEvent = 0;
     static int fountainEvent = 0;
     static int lakeEvent = 0;
 
     static int goblinHp;
-    static String goblinWeapon;
-
-    
+    static String goblinWeapon;    
     public static void main(String[] args){
 
         PlayerSetup();
         GoblinSetup();
-
+        System.out.println("");
         TownGate();
     
     }
@@ -35,6 +32,7 @@ public class Game {
 
         System.out.println("Your HP: " + playerHp);
         System.out.println("Your Weapon: " + playerWeapon);
+        System.out.println("");
         System.out.print("Please enter your name: ");
 
         playerName = scanner.next();
@@ -56,7 +54,7 @@ public class Game {
             System.out.println("A guard is standing in front of you.\n");
         }
         else if(townEvent == 1){
-            System.out.println("The guard is standing in front of you.");
+            System.out.println("The guard is standing in front of you.\n");
         }
 
         System.out.println("[1] Talk to the guard");
@@ -83,24 +81,55 @@ public class Game {
                     townEvent = 1;
                 }
 
-                else if (townEvent == 1){
+                else if (townEvent == 1 && goblinHp != 0){
                     System.out.println("Guard: I can let you in if you bring me the goblin's head.");
                     enterScanner.nextLine();
                     System.out.println("Guard: He was roaming around the forest towards the west.");
                     enterScanner.nextLine();
                 }
+
+                else if(townEvent == 1 && goblinHp == 0){
+                    System.out.println("Guard: Oh! Is that...");
+                    enterScanner.nextLine();
+                    System.out.println("Guard: The goblin's head?!");
+                    enterScanner.nextLine();
+                    System.out.println("Guard: Thank you so much for taking him down!");
+                    enterScanner.nextLine();
+                    System.out.println("Guard: I can't leave my post and there isn't anyone available recently to deal with him.");
+                    enterScanner.nextLine();
+                    System.out.println("Guard: Anyways, the sun is about to set. You should spend the rest of the night here.");
+                    enterScanner.nextLine();
+                    System.out.println("Guard: Again, thank you, "+ playerName + ".");
+                    enterScanner.nextLine();
+
+                    System.out.println("Prologue Ends");
+
+                    System.exit(0);
+                }
+
                 TownGate();
             }
             case 2 -> {
+                if(playerHp > 10){
                 System.out.println("Guard: What the hell? Don't be stupid.");
                 System.out.println("\nThe guard hits you back. He don't seem to be fazed.");
                 playerHp--;
                 System.out.println("\nYour HP: " + playerHp);
+                }
+
+                else if(playerHp <= 10){
+                    System.out.println("The guard blocks your attack.");
+                    enterScanner.nextLine();
+                    System.out.println("Guard: You've taken a lot of damage already, learn your lesson.\n");
+                }
+
                 enterScanner.nextLine();
                 townEvent = 1;
                 TownGate();
             }
             case 3 -> {
+                System.out.println("You walked towards south.");
+                enterScanner.nextLine();
                 CrossRoad();
             }
             default -> TownGate();
@@ -109,7 +138,7 @@ public class Game {
 
     public static void CrossRoad(){
         System.out.println("\n\n\n");
-        System.out.println("You found yourself at a cross road.");
+        System.out.println("You found yourself at a cross road.\n");
         System.out.println("[1] North");
         System.out.println("[2] East");
         System.out.println("[3] West");
@@ -185,38 +214,88 @@ public class Game {
     }
 
     public static void Forest(){
-        int battleStarted = 0;
 
         System.out.println("\n\n\n");
-        System.out.println("You found yourself at a forest.");
-        enterScanner.nextLine();
-        System.out.println("A goblin appears before you!\n");
+        switch(goblinHp){
+            case 10 -> {
+                System.out.println("You found yourself at a forest.");
+                enterScanner.nextLine();
+                System.out.println("A goblin appears before you!\n");
+            }
+
+            case 6 ->{
+            System.out.println("The goblin seems hurt.\n");
+            }
+            
+            case 2 -> {
+            System.out.println("The goblin struggles to stay on his feet.\n");
+            }
+
+            case -2 -> {
+                System.out.println("The goblin fell!\n");
+                goblinHp = 0;
+            }
+        }
+
+        if(goblinHp > 0){
         System.out.println("[1] Attack");
         System.out.println("[2] Flee");
+        }
+        else if(goblinHp <= 0){
+            System.out.println("It's about night time.");
+            System.out.println("Better head back to the town.\n");
+
+            System.out.println("[1] Return to the crossroad");
+        }
         System.out.print("\nWhat would you like to do?: ");
 
 
         choice = scanner.nextInt();
+        if(goblinHp != 0){
+            switch(choice){
+                case 1 -> { //Battle Starts!
+                if(goblinHp > 0){
+                    if(playerHp > 0){
+                        Battle();
+                    }
+                    else if(playerHp == 0){
+                        System.out.println("The goblin kills you.");
+                        enterScanner.nextLine();
+                        System.out.println("Game Over");
+                        enterScanner.nextLine();
+                        System.exit(0);
+                    }
+                    Forest();
+                }
 
-        switch(choice){
-            case 1 -> { //Battle Starts!
-            System.out.println("You attacked the goblin and dealt 4 damage!");
-            goblinHp -= 4;
-            enterScanner.nextLine();
-            System.out.println("The goblin hit you back with its club!");
-            playerHp -= 2;
-            enterScanner.nextLine();
-            
+                }
+                case 2 -> {
+                    CrossRoad();
+                }
+                default -> Forest();
             }
-            case 2 -> {
-                CrossRoad();
+        }
+
+        else if(goblinHp == 0){
+            switch(choice){
+                case 1 -> CrossRoad();
+
+                default -> Forest();
             }
-            default -> Forest();
+
         }
     }
 
     public static void Battle(){
-
+        System.out.println("You attacked the goblin and dealt 4 damage!");
+        goblinHp -= 4;
+        enterScanner.nextLine();
+        if(goblinHp > 0){
+            System.out.println("The goblin hit you back with it's " + goblinWeapon + " and dealt 3 damage!");
+            playerHp -= 3;
+            System.out.println("Your HP: " + playerHp);
+            enterScanner.nextLine();
+        }
     }
 
     public static void Fountain(){
