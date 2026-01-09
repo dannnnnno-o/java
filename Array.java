@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.util.Arrays;
+@SuppressWarnings("unused")
 
 public class Array {
     static Scanner scanner = new Scanner(System.in);
